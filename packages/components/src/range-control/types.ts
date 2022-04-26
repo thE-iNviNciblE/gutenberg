@@ -188,7 +188,7 @@ export type RangeControlProps< P > = MarksProps & {
 	 * The value to revert to if the Reset button is clicked (enabled by
 	 * `allowReset`)
 	 */
-	resetFallbackValue?: number | string;
+	resetFallbackValue?: number | string | null;
 	/**
 	 * Define if separator line under/above control row should be disabled or
 	 * full width. By default it is placed below excluding underline the
@@ -204,8 +204,8 @@ export type RangeControlProps< P > = MarksProps & {
 	 */
 	shiftStep?: number;
 	/**
-	 * Forcing the Tooltip UI to show or hide. This is overriden to `false` when
-	 * `step` is set to the special string value `any`.
+	 * Forcing the Tooltip UI to show or hide. This is overridden to `false`
+	 * when `step` is set to the special string value `any`.
 	 */
 	showTooltip?: boolean;
 	/**

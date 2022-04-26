@@ -200,7 +200,7 @@ function RangeControl< P >(
 			className={ classes }
 			label={ label }
 			hideLabelFromVision={ hideLabelFromVision }
-			id={ id as string }
+			id={ `${ id }` }
 			help={ help }
 		>
 			<Root className="components-range-control__root">
@@ -219,7 +219,7 @@ function RangeControl< P >(
 						className="components-range-control__slider"
 						describedBy={ describedBy }
 						disabled={ disabled }
-						id={ id as string }
+						id={ `${ id }` }
 						label={ label }
 						max={ max }
 						min={ min }

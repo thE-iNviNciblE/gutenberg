@@ -305,7 +305,7 @@ const MyRangeControl() {
 -   Required: No
 -   Platform: Web
 
-### `resetFallbackValue`: `number | string`
+### `resetFallbackValue`: `number` | `string` | `null`
 
 The value to revert to if the Reset button is clicked (enabled by `allowReset`)
 
@@ -327,7 +327,7 @@ Passed as a prop to the `NumberControl` component and is only applicable if `wit
 
 ### `showTooltip`: `boolean`
 
-Forcing the Tooltip UI to show or hide. This is overriden to `false` when `step` is set to the special string value `any`.
+Forcing the Tooltip UI to show or hide. This is overridden to `false` when `step` is set to the special string value `any`.
 
 -   Required: No
 -   Platform: Web
