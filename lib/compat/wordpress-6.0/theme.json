@@ -241,8 +241,6 @@
 		}
 	},
 	"styles": {
-		"spacing": {
-			"blockGap": "24px"
-		}
+		"spacing": { "blockGap": "24px" }
 	}
 }
