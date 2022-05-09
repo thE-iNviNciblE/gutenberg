@@ -375,6 +375,14 @@ class WP_Theme_JSON_Gutenberg extends WP_Theme_JSON_5_9 {
 		return $block_rules;
 	}
 
+	/**
+	 * Generate additional rules for the root selector
+	 *
+	 * @param string $selector The selector to generate rules for.
+	 * @param object $theme_json A copy of $this->theme_json.
+	 * @param bool $use_root_vars whether or not the theme has opted in to root padding variables.
+	 * @return string The rules for the root selector.
+	 */
 	protected static function additional_root_selector_rules( $selector, $theme_json, $use_root_vars ) {
 		$block_rules = '';
 		if ( static::ROOT_BLOCK_SELECTOR === $selector ) {
