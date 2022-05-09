@@ -368,40 +368,49 @@ class WP_Theme_JSON_Gutenberg extends WP_Theme_JSON_5_9 {
 				$block_rules     .= static::to_ruleset( $selector_duotone, $declarations_duotone );
 			}
 
-			if ( static::ROOT_BLOCK_SELECTOR === $selector ) {
-				if ( $use_root_vars ) {
-					$block_rules .= '.wp-site-blocks { padding-top: var(--wp--style--root--padding-top); padding-bottom: var(--wp--style--root--padding-bottom); }';
+			// 4. Generate additional rules for the root block.
+			$block_rules .= static::additional_root_selector_rules( $selector, $this->theme_json, $use_root_vars );
+		}
 
-					$block_rules .= '.wp-site-blocks,
-					.wp-block-group.alignfull,
-					.wp-block-group.has-background,
-					.wp-block-columns.alignfull.has-background,
-					.wp-block-cover.alignfull
+		return $block_rules;
+	}
+
+	protected static function additional_root_selector_rules( $selector, $theme_json, $use_root_vars ) {
+		$block_rules = '';
+		if ( static::ROOT_BLOCK_SELECTOR === $selector ) {
+			if ( $use_root_vars ) {
+				$block_rules .= '.wp-site-blocks { padding-top: var(--wp--style--root--padding-top); padding-bottom: var(--wp--style--root--padding-bottom); }';
+
+				$block_rules .= '.wp-site-blocks,
+				.wp-block-group.alignfull,
+				.wp-block-group.has-background,
+				.wp-block-columns.alignfull.has-background,
+				.wp-block-cover.alignfull
+				{ padding-right: var(--wp--style--root--padding-right); padding-left: var(--wp--style--root--padding-left); }';
+
+				$block_rules .= '.wp-site-blocks .alignfull { margin-right: calc(var(--wp--style--root--padding-right) * -1); margin-left: calc(var(--wp--style--root--padding-left) * -1); width: unset; }';
+
+				// Alignfull blocks in the block editor that are direct children of post content should also get negative margins.
+				if ( is_callable( 'get_current_screen' ) && get_current_screen()->is_block_editor() ) {
+					$block_rules .= 'body > .is-root-container,
+					.edit-post-visual-editor__post-title-wrapper,
+					.is-root-container .wp-block.alignfull > .wp-block-group,
+					.is-root-container .wp-block.alignfull > .wp-block-columns.has-background,
+					.is-root-container .wp-block.alignfull > .wp-block-cover
 					{ padding-right: var(--wp--style--root--padding-right); padding-left: var(--wp--style--root--padding-left); }';
 
-					$block_rules .= '.wp-site-blocks .alignfull { margin-right: calc(var(--wp--style--root--padding-right) * -1); margin-left: calc(var(--wp--style--root--padding-left) * -1); width: unset; }';
-
-					// Alignfull blocks in the block editor that are direct children of post content should also get negative margins.
-					if ( is_callable( 'get_current_screen' ) && get_current_screen()->is_block_editor() ) {
-						$block_rules .= 'body > .is-root-container,
-						.edit-post-visual-editor__post-title-wrapper,
-						.is-root-container .wp-block.alignfull > .wp-block-group,
-						.is-root-container .wp-block.alignfull > .wp-block-columns.has-background,
-						.is-root-container .wp-block.alignfull > .wp-block-cover
-						{ padding-right: var(--wp--style--root--padding-right); padding-left: var(--wp--style--root--padding-left); }';
-
-						$block_rules .= '.is-root-container .wp-block.alignfull { margin-right: calc(var(--wp--style--root--padding-right) * -1); margin-left: calc(var(--wp--style--root--padding-left) * -1); max-width: unset; width: unset; }';
-					}
+					$block_rules .= '.is-root-container .wp-block.alignfull { margin-right: calc(var(--wp--style--root--padding-right) * -1); margin-left: calc(var(--wp--style--root--padding-left) * -1); max-width: unset; width: unset; }';
 				}
-				$block_rules .= '.wp-site-blocks > .alignleft { float: left; margin-right: 2em; }';
-				$block_rules .= '.wp-site-blocks > .alignright { float: right; margin-left: 2em; }';
-				$block_rules .= '.wp-site-blocks > .aligncenter { justify-content: center; margin-left: auto; margin-right: auto; }';
+			}
 
-				$has_block_gap_support = _wp_array_get( $this->theme_json, array( 'settings', 'spacing', 'blockGap' ) ) !== null;
-				if ( $has_block_gap_support ) {
-					$block_rules .= '.wp-site-blocks > * { margin-block-start: 0; margin-block-end: 0; }';
-					$block_rules .= '.wp-site-blocks > * + * { margin-block-start: var( --wp--style--block-gap ); }';
-				}
+			$block_rules .= '.wp-site-blocks > .alignleft { float: left; margin-right: 2em; }';
+			$block_rules .= '.wp-site-blocks > .alignright { float: right; margin-left: 2em; }';
+			$block_rules .= '.wp-site-blocks > .aligncenter { justify-content: center; margin-left: auto; margin-right: auto; }';
+
+			$has_block_gap_support = _wp_array_get( $theme_json, array( 'settings', 'spacing', 'blockGap' ) ) !== null;
+			if ( $has_block_gap_support ) {
+				$block_rules .= '.wp-site-blocks > * { margin-block-start: 0; margin-block-end: 0; }';
+				$block_rules .= '.wp-site-blocks > * + * { margin-block-start: var( --wp--style--block-gap ); }';
 			}
 		}
 
