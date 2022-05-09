@@ -116,7 +116,7 @@ export default {
 			style?.spacing?.blockGap &&
 			! shouldSkipSerialization( blockName, 'spacing', 'blockGap' )
 				? getGapCSSValue( style?.spacing?.blockGap, '0.5em' )
-				: 'var( --wp--style--block-gap, 0.5em )';
+				: 'var( --wp--style--block-gap, 0.5em )'; // TODO: If there's a value set at the block level in theme.json, how do we ensure this value doesn't override that?
 		const justifyContent =
 			justifyContentMap[ layout.justifyContent ] ||
 			justifyContentMap.left;

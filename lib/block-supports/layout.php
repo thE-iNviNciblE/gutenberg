@@ -106,7 +106,7 @@ function gutenberg_get_layout_style( $selector, $layout, $has_block_gap_support 
 				$gap_column = isset( $gap_value['left'] ) ? $gap_value['left'] : '0.5em';
 				$gap_value  = $gap_row === $gap_column ? $gap_row : $gap_row . ' ' . $gap_column;
 			}
-			$gap_style = $gap_value && ! $should_skip_gap_serialization ? $gap_value : 'var( --wp--style--block-gap, 0.5em )';
+			$gap_style = $gap_value && ! $should_skip_gap_serialization ? $gap_value : 'var( --wp--style--block-gap, 0.5em )';  // TODO: If there's a value set at the block level in theme.json, how do we ensure this value doesn't override that?
 			$style    .= "gap: $gap_style;";
 		} else {
 			$style .= 'gap: 0.5em;';
