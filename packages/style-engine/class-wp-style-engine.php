@@ -203,15 +203,16 @@ class WP_Style_Engine {
 	 * Returns an CSS ruleset.
 	 * Styles are bundled based on the instructions in BLOCK_STYLE_DEFINITIONS_METADATA.
 	 *
-	 * @param array $block_styles An array of styles from a block's attributes.
+	 * @param array $styles  An array of Gutenberg styles from a block's attributes or theme JSON.
+	 * @param array $options An array of options to determine the output.
 	 *
 	 * @return array|null array(
-	 *     'styles'     => (string) A CSS ruleset formatted to be placed in an HTML `style` attribute or tag.
+	 *     'styles'     => (string) A CSS ruleset formatted to be placed in an HTML `style` attribute or tag. Default is a string of inline styles.
 	 *     'classnames' => (string) Classnames separated by a space.
 	 * );
 	 */
-	public function generate( $block_styles ) {
-		if ( empty( $block_styles ) || ! is_array( $block_styles ) ) {
+	public function generate( $styles, $options ) {
+		if ( empty( $styles ) || ! is_array( $styles ) ) {
 			return null;
 		}
 
@@ -222,7 +223,7 @@ class WP_Style_Engine {
 		// Collect CSS and classnames.
 		foreach ( self::BLOCK_STYLE_DEFINITIONS_METADATA as $definition_group ) {
 			foreach ( $definition_group as $style_definition ) {
-				$style_value = _wp_array_get( $block_styles, $style_definition['path'], null );
+				$style_value = _wp_array_get( $styles, $style_definition['path'], null );
 
 				if ( empty( $style_value ) ) {
 					continue;
@@ -234,21 +235,34 @@ class WP_Style_Engine {
 		}
 
 		// Build CSS rules output.
-		$css_output = '';
+		$selector   = isset( $options['selector'] ) ? $options['selector'] : null;
+		$css_output = array();
+
 		if ( ! empty( $css_rules ) ) {
 			// Generate inline style rules.
-			// In the future there might be a flag in the option to output
-			// inline CSS rules (for HTML style attributes) vs selectors + rules for style tags.
 			foreach ( $css_rules as $rule => $value ) {
 				$filtered_css = esc_html( safecss_filter_attr( "{$rule}: {$value}" ) );
 				if ( ! empty( $filtered_css ) ) {
-					$css_output .= $filtered_css . '; ';
+					$css_output[] = $filtered_css . ';';
 				}
 			}
 		}
 
 		if ( ! empty( $css_output ) ) {
-			$styles_output['css'] = trim( $css_output );
+			if ( $selector ) {
+				$style_block          = "$selector {\n";
+				$css_output           = array_map(
+					function ( $value ) {
+						return "\t$value\n";
+					},
+					$css_output
+				);
+				$style_block         .= implode( '', $css_output );
+				$style_block         .= "}\n";
+				$styles_output['css'] = $style_block;
+			} else {
+				$styles_output['css'] = implode( ' ', $css_output );
+			}
 		}
 
 		if ( ! empty( $classnames ) ) {
@@ -294,17 +308,18 @@ class WP_Style_Engine {
  * Returns an CSS ruleset.
  * Styles are bundled based on the instructions in BLOCK_STYLE_DEFINITIONS_METADATA.
  *
- * @param array $block_styles An array of styles from a block's attributes.
+ * @param array $styles  An array of Gutenberg styles from a block's attributes or theme JSON.
+ * @param array $options An array of options to determine the output.
  *
  * @return array|null array(
  *     'styles'     => (string) A CSS ruleset formatted to be placed in an HTML `style` attribute or tag.
  *     'classnames' => (string) Classnames separated by a space.
  * );
  */
-function wp_style_engine_generate( $block_styles ) {
+function wp_style_engine_generate( $styles, $options = array() ) {
 	if ( class_exists( 'WP_Style_Engine' ) ) {
 		$style_engine = WP_Style_Engine::get_instance();
-		return $style_engine->generate( $block_styles );
+		return $style_engine->generate( $styles, $options );
 	}
 	return null;
 }

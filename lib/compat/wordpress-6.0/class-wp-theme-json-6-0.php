@@ -330,6 +330,8 @@ class WP_Theme_JSON_6_0 extends WP_Theme_JSON_5_9 {
 			$settings     = _wp_array_get( $this->theme_json, array( 'settings' ) );
 			$declarations = static::compute_style_properties( $node, $settings );
 
+
+
 			// 1. Separate the ones who use the general selector
 			// and the ones who use the duotone selector.
 			$declarations_duotone = array();
@@ -353,7 +355,11 @@ class WP_Theme_JSON_6_0 extends WP_Theme_JSON_5_9 {
 			}
 
 			// 2. Generate the rules that use the general selector.
-			$block_rules .= static::to_ruleset( $selector, $declarations );
+			$styles = gutenberg_style_engine_generate( $node, array( 'selector' => $selector ) );
+			if ( isset( $styles['css'] ) ) {
+				$block_rules .= $styles['css'];
+			}
+
 
 			// 3. Generate the rules that use the duotone selector.
 			if ( isset( $metadata['duotone'] ) && ! empty( $declarations_duotone ) ) {
