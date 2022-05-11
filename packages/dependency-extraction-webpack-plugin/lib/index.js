@@ -130,14 +130,14 @@ class DependencyExtractionWebpackPlugin {
 								compiler.webpack.Compilation
 									.PROCESS_ASSETS_STAGE_ANALYSE,
 						},
-						() => this.addAssets( compilation, compiler )
+						() => this.addAssets( compilation )
 					);
 				}
 			);
 		}
 	}
 
-	addAssets( compilation, compiler ) {
+	addAssets( compilation ) {
 		const {
 			combineAssets,
 			combinedOutputFile,
@@ -163,127 +163,97 @@ class DependencyExtractionWebpackPlugin {
 
 		const combinedAssetsData = {};
 
-		// Process each entry point independently.
-		for ( const [
-			entrypointName,
-			entrypoint,
-		] of compilation.entrypoints.entries() ) {
-			const entrypointExternalizedWpDeps = new Set();
+		// Accumulate all entrypoint chunks, some of them shared
+		const entrypointChunks = new Set();
+		for ( const entrypoint of compilation.entrypoints.values() ) {
+			for ( const chunk of entrypoint.chunks ) {
+				entrypointChunks.add( chunk );
+			}
+		}
+
+		// Process each entrypoint chunk independently
+		for ( const chunk of entrypointChunks ) {
+			const chunkFilename = Array.from( chunk.files ).find( ( f ) =>
+				/\.js$/i.test( f )
+			);
+			if ( ! chunkFilename ) {
+				// There's no JS file in this chunk, there's no work for us.
+				continue;
+			}
+
+			const chunkDeps = new Set();
 			if ( injectPolyfill ) {
-				entrypointExternalizedWpDeps.add( 'wp-polyfill' );
+				chunkDeps.add( 'wp-polyfill' );
 			}
 
 			const processModule = ( { userRequest } ) => {
 				if ( this.externalizedDeps.has( userRequest ) ) {
-					const scriptDependency = this.mapRequestToDependency(
-						userRequest
-					);
-					entrypointExternalizedWpDeps.add( scriptDependency );
+					chunkDeps.add( this.mapRequestToDependency( userRequest ) );
 				}
 			};
 
 			// Search for externalized modules in all chunks.
-			for ( const chunk of entrypoint.chunks ) {
-				const modulesIterable = isWebpack4
-					? chunk.modulesIterable
-					: compilation.chunkGraph.getChunkModules( chunk );
-				for ( const chunkModule of modulesIterable ) {
-					processModule( chunkModule );
-					// Loop through submodules of ConcatenatedModule.
-					if ( chunkModule.modules ) {
-						for ( const concatModule of chunkModule.modules ) {
-							processModule( concatModule );
-						}
+			const modulesIterable = isWebpack4
+				? chunk.modulesIterable
+				: compilation.chunkGraph.getChunkModules( chunk );
+			for ( const chunkModule of modulesIterable ) {
+				processModule( chunkModule );
+				// Loop through submodules of ConcatenatedModule.
+				if ( chunkModule.modules ) {
+					for ( const concatModule of chunkModule.modules ) {
+						processModule( concatModule );
 					}
 				}
 			}
 
+			// Go through the assets and hash the sources. We can't just use
+			// `chunk.contentHash` because that's not updated when
+			// assets are minified. In practice the hash is updated by
+			// `RealContentHashPlugin` after minification, but it only modifies
+			// already-produced asset filenames and the updated hash is not
+			// available to plugins.
 			const {
 				hashFunction,
 				hashDigest,
 				hashDigestLength,
 			} = compilation.outputOptions;
-
-			// Go through the assets and hash the sources. We can't just use
-			// `entrypointChunk.contentHash` because that's not updated when
-			// assets are minified. In practice the hash is updated by
-			// `RealContentHashPlugin` after minification, but it only modifies
-			// already-produced asset filenames and the updated hash is not
-			// available to plugins.
-			const hash = createHash( hashFunction );
-			for ( const filename of entrypoint.getFiles().sort() ) {
-				const asset = compilation.getAsset( filename );
-				hash.update( asset.source.buffer() );
-			}
-			const version = hash
+			const contentHash = createHash( hashFunction )
+				.update( compilation.getAsset( chunkFilename ).source.buffer() )
 				.digest( hashDigest )
 				.slice( 0, hashDigestLength );
-
-			const entrypointChunk = isWebpack4
-				? entrypoint.chunks.find( ( c ) => c.name === entrypointName )
-				: entrypoint.getEntrypointChunk();
 
 			const assetData = {
 				// Get a sorted array so we can produce a stable, stringified representation.
-				dependencies: Array.from( entrypointExternalizedWpDeps ).sort(),
-				version,
+				dependencies: Array.from( chunkDeps ).sort(),
+				version: contentHash,
 			};
 
-			const assetString = this.stringify( assetData );
-			const contentHash = createHash( hashFunction )
-				.update( assetString )
-				.digest( hashDigest )
-				.slice( 0, hashDigestLength );
-
-			// Determine a filename for the asset file.
-			const [ filename, query ] = entrypointName.split( '?', 2 );
-			const buildFilename = compilation.getPath(
-				compiler.options.output.filename,
-				{
-					chunk: entrypointChunk,
-					filename,
-					query,
-					basename: basename( filename ),
-					contentHash,
-				}
-			);
-
 			if ( combineAssets ) {
-				combinedAssetsData[ buildFilename ] = assetData;
+				combinedAssetsData[ chunkFilename ] = assetData;
 				continue;
 			}
 
-			let assetFilename;
-
-			if ( outputFilename ) {
-				assetFilename = compilation.getPath( outputFilename, {
-					chunk: entrypointChunk,
-					filename,
-					query,
-					basename: basename( filename ),
-					contentHash,
-				} );
-			} else {
-				assetFilename = buildFilename.replace(
-					/\.js$/i,
-					'.asset.' + ( outputFormat === 'php' ? 'php' : 'json' )
-				);
-			}
+			const assetFilename = outputFilename
+				? compilation.getPath( outputFilename, {
+						chunk,
+						filename: chunkFilename,
+						basename: basename( chunkFilename ),
+						contentHash,
+				  } )
+				: chunkFilename.replace(
+						/\.js$/i,
+						'.asset.' + ( outputFormat === 'php' ? 'php' : 'json' )
+				  );
 
 			// Add source and file into compilation for webpack to output.
-			compilation.assets[ assetFilename ] = new RawSource( assetString );
-			entrypointChunk.files[ isWebpack4 ? 'push' : 'add' ](
-				assetFilename
+			compilation.assets[ assetFilename ] = new RawSource(
+				this.stringify( assetData )
 			);
+			chunk.files[ isWebpack4 ? 'push' : 'add' ]( assetFilename );
 		}
 
 		if ( combineAssets ) {
-			// Assert the `string` type for output path.
-			// The type indicates the option may be `undefined`.
-			// However, at this point in compilation, webpack has filled the options in if
-			// they were not provided.
-			const outputFolder = /** @type {{path:string}} */ ( compiler.options
-				.output ).path;
+			const outputFolder = compilation.outputOptions.path;
 
 			const assetsFilePath = path.resolve(
 				outputFolder,

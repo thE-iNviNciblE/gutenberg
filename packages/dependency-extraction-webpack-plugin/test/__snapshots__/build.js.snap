@@ -212,12 +212,17 @@ Array [
 `;
 
 exports[`DependencyExtractionWebpackPlugin Webpack \`runtime-chunk-single\` should produce expected output: Asset file 'a.asset.php' should match snapshot 1`] = `
-"<?php return array('dependencies' => array('wp-blob'), 'version' => 'afb97a54745e17cee963');
+"<?php return array('dependencies' => array('wp-blob'), 'version' => '4514ed711f6c035e0887');
 "
 `;
 
 exports[`DependencyExtractionWebpackPlugin Webpack \`runtime-chunk-single\` should produce expected output: Asset file 'b.asset.php' should match snapshot 1`] = `
-"<?php return array('dependencies' => array('lodash', 'wp-blob'), 'version' => 'ed750e4e046b77c317cb');
+"<?php return array('dependencies' => array('lodash', 'wp-blob'), 'version' => '168d32b5fb42f9e5d8ce');
+"
+`;
+
+exports[`DependencyExtractionWebpackPlugin Webpack \`runtime-chunk-single\` should produce expected output: Asset file 'runtime.asset.php' should match snapshot 1`] = `
+"<?php return array('dependencies' => array(), 'version' => 'd3c2ce2cb84ff74b92e0');
 "
 `;
 
