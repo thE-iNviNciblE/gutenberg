@@ -11,7 +11,7 @@ import { useState, useEffect } from '@wordpress/element';
 /**
  * Internal dependencies
  */
-import TimePicker from '../time';
+import TimePicker from '..';
 
 const meta: ComponentMeta< typeof TimePicker > = {
 	title: 'Components/TimePicker',

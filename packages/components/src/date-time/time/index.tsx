@@ -21,11 +21,29 @@ import { __ } from '@wordpress/i18n';
 /**
  * Internal dependencies
  */
-import Button from '../button';
-import ButtonGroup from '../button-group';
+import Button from '../../button';
+import ButtonGroup from '../../button-group';
 import TimeZone from './timezone';
-import type { WordPressComponentProps } from '../ui/context';
-import type { UpdateOnBlurAsIntegerFieldProps, TimePickerProps } from './types';
+import type { WordPressComponentProps } from '../../ui/context';
+import type {
+	UpdateOnBlurAsIntegerFieldProps,
+	TimePickerProps,
+} from '../types';
+import {
+	Wrapper,
+	Fieldset,
+	Legend,
+	hoursField,
+	TimeSeparator,
+	minutesField,
+	monthField as monthFieldStyles,
+	dayField as dayFieldStyles,
+	yearField,
+	TimeWrapper,
+} from './styles';
+import { HStack } from '../../h-stack';
+import { Spacer } from '../../spacer';
+import { useCx } from '../../utils';
 
 const TIMEZONELESS_FORMAT = 'YYYY-MM-DDTHH:mm:ss';
 
@@ -129,6 +147,8 @@ export function TimePicker( {
 		[ date, is12Hour ]
 	);
 
+	const cx = useCx();
+
 	/**
 	 * Function that sets the date state and calls the onChange with a new date.
 	 * The date is truncated at the minutes.
@@ -172,96 +192,66 @@ export function TimePicker( {
 		};
 	}
 
-	const dayFormat = (
-		<div className="components-datetime__time-field components-datetime__time-field-day">
-			<UpdateOnBlurAsIntegerField
-				aria-label={ __( 'Day' ) }
-				className="components-datetime__time-field-day-input"
-				type="number"
-				// The correct function to call in moment.js is "date" not "day".
-				name="date"
-				value={ day }
-				step={ 1 }
-				min={ 1 }
-				max={ 31 }
-				onUpdate={ update( 'date' ) }
-			/>
-		</div>
+	const dayField = (
+		<UpdateOnBlurAsIntegerField
+			className={ cx(
+				'components-datetime__time-field-day-input',
+				dayFieldStyles
+			) }
+			aria-label={ __( 'Day' ) }
+			type="number"
+			// The correct function to call in moment.js is "date" not "day".
+			name="date"
+			value={ day }
+			step={ 1 }
+			min={ 1 }
+			max={ 31 }
+			onUpdate={ update( 'date' ) }
+		/>
 	);
 
-	const monthFormat = (
-		<div className="components-datetime__time-field components-datetime__time-field-month">
-			<UpdateOnBlurAsIntegerField
-				as="select"
-				aria-label={ __( 'Month' ) }
-				className="components-datetime__time-field-month-select"
-				name="month"
-				value={ month }
-				// The value starts from 0, so we have to -1 when setting month.
-				onUpdate={ ( value ) => update( 'month' )( value - 1 ) }
-			>
-				<option value="01">{ __( 'January' ) }</option>
-				<option value="02">{ __( 'February' ) }</option>
-				<option value="03">{ __( 'March' ) }</option>
-				<option value="04">{ __( 'April' ) }</option>
-				<option value="05">{ __( 'May' ) }</option>
-				<option value="06">{ __( 'June' ) }</option>
-				<option value="07">{ __( 'July' ) }</option>
-				<option value="08">{ __( 'August' ) }</option>
-				<option value="09">{ __( 'September' ) }</option>
-				<option value="10">{ __( 'October' ) }</option>
-				<option value="11">{ __( 'November' ) }</option>
-				<option value="12">{ __( 'December' ) }</option>
-			</UpdateOnBlurAsIntegerField>
-		</div>
-	);
-
-	const dayMonthFormat = is12Hour ? (
-		<>
-			{ monthFormat }
-			{ dayFormat }
-		</>
-	) : (
-		<>
-			{ dayFormat }
-			{ monthFormat }
-		</>
+	const monthField = (
+		<UpdateOnBlurAsIntegerField
+			as="select"
+			className={ cx(
+				'components-datetime__time-field-month-select',
+				monthFieldStyles
+			) }
+			aria-label={ __( 'Month' ) }
+			name="month"
+			value={ month }
+			// The value starts from 0, so we have to -1 when setting month.
+			onUpdate={ ( value ) => update( 'month' )( value - 1 ) }
+		>
+			<option value="01">{ __( 'January' ) }</option>
+			<option value="02">{ __( 'February' ) }</option>
+			<option value="03">{ __( 'March' ) }</option>
+			<option value="04">{ __( 'April' ) }</option>
+			<option value="05">{ __( 'May' ) }</option>
+			<option value="06">{ __( 'June' ) }</option>
+			<option value="07">{ __( 'July' ) }</option>
+			<option value="08">{ __( 'August' ) }</option>
+			<option value="09">{ __( 'September' ) }</option>
+			<option value="10">{ __( 'October' ) }</option>
+			<option value="11">{ __( 'November' ) }</option>
+			<option value="12">{ __( 'December' ) }</option>
+		</UpdateOnBlurAsIntegerField>
 	);
 
 	return (
-		<div className={ classnames( 'components-datetime__time' ) }>
-			<fieldset>
-				<legend className="components-datetime__time-legend invisible">
-					{ __( 'Date' ) }
-				</legend>
-				<div className="components-datetime__time-wrapper">
-					{ dayMonthFormat }
-
-					<div className="components-datetime__time-field components-datetime__time-field-year">
-						<UpdateOnBlurAsIntegerField
-							aria-label={ __( 'Year' ) }
-							className="components-datetime__time-field-year-input"
-							type="number"
-							name="year"
-							step={ 1 }
-							min={ 0 }
-							max={ 9999 }
-							value={ year }
-							onUpdate={ update( 'year' ) }
-						/>
-					</div>
-				</div>
-			</fieldset>
-
-			<fieldset>
-				<legend className="components-datetime__time-legend invisible">
+		<Wrapper className="components-datetime__time">
+			<Fieldset>
+				<Legend className="components-datetime__time-legend">
 					{ __( 'Time' ) }
-				</legend>
-				<div className="components-datetime__time-wrapper">
-					<div className="components-datetime__time-field components-datetime__time-field-time">
+				</Legend>
+				<HStack className="components-datetime__time-wrapper">
+					<TimeWrapper className="components-datetime__time-field components-datetime__time-field-time">
 						<UpdateOnBlurAsIntegerField
+							className={ cx(
+								'components-datetime__time-field-hours-input',
+								hoursField
+							) }
 							aria-label={ __( 'Hours' ) }
-							className="components-datetime__time-field-hours-input"
 							type="number"
 							name="hours"
 							step={ 1 }
@@ -270,15 +260,18 @@ export function TimePicker( {
 							value={ hours }
 							onUpdate={ update( 'hours' ) }
 						/>
-						<span
+						<TimeSeparator
 							className="components-datetime__time-separator"
 							aria-hidden="true"
 						>
 							:
-						</span>
+						</TimeSeparator>
 						<UpdateOnBlurAsIntegerField
+							className={ cx(
+								'components-datetime__time-field-minutes-input',
+								minutesField
+							) }
 							aria-label={ __( 'Minutes' ) }
-							className="components-datetime__time-field-minutes-input"
 							type="number"
 							name="minutes"
 							step={ 1 }
@@ -287,34 +280,66 @@ export function TimePicker( {
 							value={ minutes }
 							onUpdate={ update( 'minutes' ) }
 						/>
-					</div>
+					</TimeWrapper>
 					{ is12Hour && (
 						<ButtonGroup className="components-datetime__time-field components-datetime__time-field-am-pm">
 							<Button
+								className="components-datetime__time-am-button"
 								variant={
 									am === 'AM' ? 'primary' : 'secondary'
 								}
 								onClick={ updateAmPm( 'AM' ) }
-								className="components-datetime__time-am-button"
 							>
 								{ __( 'AM' ) }
 							</Button>
 							<Button
+								className="components-datetime__time-pm-button"
 								variant={
 									am === 'PM' ? 'primary' : 'secondary'
 								}
 								onClick={ updateAmPm( 'PM' ) }
-								className="components-datetime__time-pm-button"
 							>
 								{ __( 'PM' ) }
 							</Button>
 						</ButtonGroup>
 					) }
-
+					<Spacer />
 					<TimeZone />
-				</div>
-			</fieldset>
-		</div>
+				</HStack>
+			</Fieldset>
+			<Fieldset>
+				<Legend className="components-datetime__time-legend">
+					{ __( 'Date' ) }
+				</Legend>
+				<HStack className="components-datetime__time-wrapper">
+					{ is12Hour ? (
+						<>
+							{ monthField }
+							{ dayField }
+						</>
+					) : (
+						<>
+							{ dayField }
+							{ monthField }
+						</>
+					) }
+					<UpdateOnBlurAsIntegerField
+						className={ cx(
+							'components-datetime__time-field-year-input',
+							yearField
+						) }
+						aria-label={ __( 'Year' ) }
+						type="number"
+						name="year"
+						step={ 1 }
+						min={ 0 }
+						max={ 9999 }
+						value={ year }
+						onUpdate={ update( 'year' ) }
+					/>
+				</HStack>
+			</Fieldset>
+		</Wrapper>
 	);
 }
 

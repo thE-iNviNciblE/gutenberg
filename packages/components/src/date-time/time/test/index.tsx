@@ -6,7 +6,7 @@ import { render, fireEvent, screen } from '@testing-library/react';
 /**
  * Internal dependencies
  */
-import TimePicker from '../time';
+import TimePicker from '..';
 
 describe( 'TimePicker', () => {
 	it( 'should call onChange with updated date values', () => {

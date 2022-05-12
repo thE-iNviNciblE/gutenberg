@@ -11,12 +11,12 @@ import { useState, useEffect } from '@wordpress/element';
 /**
  * Internal dependencies
  */
-import DateTimePicker from '..';
+import DatePicker from '..';
 import { daysFromNow, isWeekend } from './utils';
 
-const meta: ComponentMeta< typeof DateTimePicker > = {
-	title: 'Components/DateTimePicker',
-	component: DateTimePicker,
+const meta: ComponentMeta< typeof DatePicker > = {
+	title: 'Components/DatePicker',
+	component: DatePicker,
 	argTypes: {
 		currentDate: { control: 'date' },
 		onChange: { action: 'onChange', control: { type: null } },
@@ -28,7 +28,7 @@ const meta: ComponentMeta< typeof DateTimePicker > = {
 };
 export default meta;
 
-const Template: ComponentStory< typeof DateTimePicker > = ( {
+const Template: ComponentStory< typeof DatePicker > = ( {
 	currentDate,
 	onChange,
 	...args
@@ -38,7 +38,7 @@ const Template: ComponentStory< typeof DateTimePicker > = ( {
 		setDate( currentDate );
 	}, [ currentDate ] );
 	return (
-		<DateTimePicker
+		<DatePicker
 			{ ...args }
 			currentDate={ date }
 			onChange={ ( newDate ) => {
@@ -49,13 +49,11 @@ const Template: ComponentStory< typeof DateTimePicker > = ( {
 	);
 };
 
-export const Default: ComponentStory< typeof DateTimePicker > = Template.bind(
+export const Default: ComponentStory< typeof DatePicker > = Template.bind( {} );
+
+export const WithEvents: ComponentStory< typeof DatePicker > = Template.bind(
 	{}
 );
-
-export const WithEvents: ComponentStory<
-	typeof DateTimePicker
-> = Template.bind( {} );
 WithEvents.args = {
 	currentDate: new Date(),
 	events: [
@@ -67,7 +65,7 @@ WithEvents.args = {
 };
 
 export const WithInvalidDates: ComponentStory<
-	typeof DateTimePicker
+	typeof DatePicker
 > = Template.bind( {} );
 WithInvalidDates.args = {
 	currentDate: new Date(),
