@@ -61,15 +61,33 @@ export function getValuesFromColors( colors = [] ) {
  */
 
 /**
- * The SVG part of the duotone filter.
+ * Stylesheet for rendering the duotone filter.
+ *
+ * @param {Object} props          Duotone props.
+ * @param {string} props.selector Selector to apply the filter to.
+ * @param {string} props.id       Unique id for this duotone filter.
+ *
+ * @return {WPElement} Duotone element.
+ */
+function DuotoneStylesheet( { colors, selector, id } ) {
+	const css = `
+${ selector } {
+	filter: ${ colors.length > 0 ? `url( #${ id } )` : 'none' };
+}
+`;
+	return <style>{ css }</style>;
+}
+
+/**
+ * SVG for rendering the duotone filter.
  *
  * @param {Object}   props        Duotone props.
  * @param {string}   props.id     Unique id for this duotone filter.
- * @param {string[]} props.colors Color strings from dark to light.
+ * @param {string[]} props.colors Array of RBG color strings.
  *
- * @returns {WPElement} Duotone SVG.
+ * @return {WPElement} Duotone element.
  */
-function DuotoneFilterSvg( { id, colors } ) {
+function DuotoneFilter( { id, colors } ) {
 	const values = getValuesFromColors( colors );
 	return (
 		<SVG
@@ -136,25 +154,21 @@ function DuotoneFilterSvg( { id, colors } ) {
  * SVG and stylesheet needed for rendering the duotone filter.
  *
  * @param {Object}   props          Duotone props.
- * @param {string}   props.selector Selector to apply the filter to.
  * @param {string}   props.id       Unique id for this duotone filter.
- * @param {string[]} props.colors   Color strings from dark to light.
+ * @param {string[]} props.colors   Array of RBG color strings.
+ * @param {string}   props.selector Selector to apply the filter to.
  *
  * @return {WPElement} Duotone element.
  */
-function DuotoneFilter( { selector, id, colors } ) {
-	const stylesheet = `
-${ selector } {
-	filter: ${ colors.length > 0 ? `url( #${ id } )` : 'none' };
-}
-`;
-
+function InlineDuotone( { id, colors, selector } ) {
 	return (
 		<>
-			{ colors.length > 0 && (
-				<DuotoneFilterSvg id={ id } colors={ colors } />
-			) }
-			<style dangerouslySetInnerHTML={ { __html: stylesheet } } />
+			<DuotoneFilter id={ id } colors={ colors } />
+			<DuotoneStylesheet
+				id={ id }
+				colors={ colors }
+				selector={ selector }
+			/>
 		</>
 	);
 }
@@ -346,7 +360,7 @@ const withDuotoneStyles = createHigherOrderComponent(
 			<>
 				{ element &&
 					createPortal(
-						<DuotoneFilter
+						<InlineDuotone
 							selector={ selectorsGroup }
 							id={ id }
 							colors={ colors }
@@ -359,6 +373,15 @@ const withDuotoneStyles = createHigherOrderComponent(
 	},
 	'withDuotoneStyles'
 );
+
+export function PresetDuotoneFilter( { preset } ) {
+	return (
+		<DuotoneFilter
+			id={ `wp-duotone-${ preset.slug }` }
+			values={ getValuesFromColors( preset.colors ) }
+		/>
+	);
+}
 
 addFilter(
 	'blocks.registerBlockType',
