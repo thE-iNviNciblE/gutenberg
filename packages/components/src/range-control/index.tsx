@@ -230,7 +230,11 @@ function RangeControl< P >(
 						onMouseLeave={ onMouseLeave }
 						ref={ setRef }
 						step={ step }
-						value={ numericUsedValue ?? '' }
+						value={
+							Number.isNaN( numericUsedValue )
+								? ''
+								: numericUsedValue
+						}
 					/>
 					<RangeRail
 						aria-hidden={ true }
