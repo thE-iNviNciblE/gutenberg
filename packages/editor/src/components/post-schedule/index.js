@@ -4,7 +4,7 @@
 import { __experimentalGetSettings } from '@wordpress/date';
 import { useDispatch, useSelect } from '@wordpress/data';
 import { __experimentalPublishDateTimePicker as PublishDateTimePicker } from '@wordpress/block-editor';
-import { useRef, useState, useMemo } from '@wordpress/element';
+import { useState, useMemo } from '@wordpress/element';
 import { store as coreStore } from '@wordpress/core-data';
 
 /**
@@ -61,7 +61,6 @@ export default function PostSchedule( { onClose } ) {
 		[ eventsByPostType ]
 	);
 
-	const ref = useRef();
 	const settings = __experimentalGetSettings();
 
 	// To know if the current timezone is a 12 hour time with look for "a" in the time format
@@ -75,17 +74,10 @@ export default function PostSchedule( { onClose } ) {
 			.join( '' ) // Reverse the string and test for "a" not followed by a slash.
 	);
 
-	function onChange( newDate ) {
-		onUpdateDate( newDate );
-		const { ownerDocument } = ref.current;
-		ownerDocument.activeElement.blur();
-	}
-
 	return (
 		<PublishDateTimePicker
-			ref={ ref }
 			currentDate={ postDate }
-			onChange={ onChange }
+			onChange={ onUpdateDate }
 			is12Hour={ is12HourTime }
 			events={ events }
 			onMonthPreviewed={ setPreviewedMonth }
