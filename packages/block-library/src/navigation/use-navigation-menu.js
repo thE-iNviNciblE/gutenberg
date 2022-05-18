@@ -1,11 +1,14 @@
 /**
  * WordPress dependencies
  */
-import { store as coreStore } from '@wordpress/core-data';
+import {
+	store as coreStore,
+	useResourcePermissions,
+} from '@wordpress/core-data';
 import { useSelect } from '@wordpress/data';
 
 export default function useNavigationMenu( ref ) {
-	return useSelect(
+	const entityDetails = useSelect(
 		( select ) => {
 			const {
 				getEntityRecord,
@@ -13,7 +16,6 @@ export default function useNavigationMenu( ref ) {
 				getEntityRecords,
 				hasFinishedResolution,
 				isResolving,
-				canUser,
 			} = select( coreStore );
 
 			const navigationMenuSingleArgs = [
@@ -70,31 +72,26 @@ export default function useNavigationMenu( ref ) {
 				),
 				navigationMenu,
 				navigationMenus,
-				canUserUpdateNavigationMenu: ref
-					? canUser( 'update', 'navigation', ref )
-					: undefined,
-				hasResolvedCanUserUpdateNavigationMenu: hasFinishedResolution(
-					'canUser',
-					[ 'update', 'navigation', ref ]
-				),
-				canUserDeleteNavigationMenu: ref
-					? canUser( 'delete', 'navigation', ref )
-					: undefined,
-				hasResolvedCanUserDeleteNavigationMenu: hasFinishedResolution(
-					'canUser',
-					[ 'delete', 'navigation', ref ]
-				),
-				canUserCreateNavigationMenu: canUser( 'create', 'navigation' ),
-				isResolvingCanUserCreateNavigationMenu: isResolving(
-					'canUser',
-					[ 'create', 'navigation' ]
-				),
-				hasResolvedCanUserCreateNavigationMenu: hasFinishedResolution(
-					'canUser',
-					[ 'create', 'navigation' ]
-				),
 			};
 		},
 		[ ref ]
 	);
+
+	const [
+		hasResolvedPermissions,
+		{ canCreate, canUpdate, canDelete, isResolving },
+	] = useResourcePermissions( 'navigation', ref );
+
+	return {
+		...entityDetails,
+		canUserCreateNavigationMenu: canCreate,
+		hasResolvedCanUserCreateNavigationMenu: hasResolvedPermissions,
+		isResolvingCanUserCreateNavigationMenu: isResolving,
+
+		canUserDeleteNavigationMenu: canDelete,
+		hasResolvedCanUserDeleteNavigationMenu: hasResolvedPermissions,
+
+		canUserUpdateNavigationMenu: canUpdate,
+		hasResolvedCanUserUpdateNavigationMenu: hasResolvedPermissions,
+	};
 }
