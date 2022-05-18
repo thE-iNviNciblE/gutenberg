@@ -2,24 +2,6 @@
  * External dependencies
  */
 import type { Moment } from 'moment';
-import type { ReactNode } from 'react';
-
-export type UpdateOnBlurAsIntegerFieldProps = {
-	/**
-	 * The value of the integer field.
-	 */
-	value: number | string;
-
-	/**
-	 * Called when the field is changed.
-	 */
-	onUpdate: ( value: number ) => void;
-
-	/**
-	 * Children to render inside the field.
-	 */
-	children?: ReactNode;
-};
 
 export type TimePickerProps = {
 	/**

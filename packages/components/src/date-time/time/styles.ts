@@ -9,6 +9,10 @@ import { css } from '@emotion/react';
  */
 import { COLORS, CONFIG } from '../../utils';
 import { space } from '../../ui/utils/space';
+import {
+	Input,
+	BackdropUI,
+} from '../../input-control/styles/input-control-styles';
 
 export const Wrapper = styled.div``;
 
@@ -32,48 +36,26 @@ export const TimeWrapper = styled.div`
 `;
 
 const baseField = css`
-	height: ${ CONFIG.controlHeight };
-	z-index: 1;
-
-	// TODO: how to use input-style__neutral() mixin?
-	box-shadow: 0 0 0 transparent;
-	transition: box-shadow 0.1s linear;
-	border-radius: ${ CONFIG.radiusBlockUi };
-	border: ${ CONFIG.borderWidth } solid ${ COLORS.gray[ 700 ] };
-	@media ( prefers-reduced-motion: reduce ) {
-		transition-duration: 0s;
-		transition-delay: 0s;
+	&&& ${ Input } {
+		padding-left: ${ space( 2 ) };
+		padding-right: ${ space( 2 ) };
+		text-align: center;
 	}
-
-	&:focus {
-		// TODO: how to use input-style__focus() mixin?
-		&&& {
-			border-color: var( --wp-admin-theme-color );
-		}
-		box-shadow: 0 0 0
-			calc( ${ CONFIG.borderWidthFocus } - ${ CONFIG.borderWidth } )
-			var( --wp-admin-theme-color );
-		// Windows High Contrast mode will show this outline, but not the box-shadow.
-		outline: 2px solid transparent;
-	}
-`;
-
-const baseInput = css`
-	-moz-appearance: textfield;
-	text-align: center;
 `;
 
 export const hoursField = css`
 	${ baseField }
-	${ baseInput }
+
 	width: 35px;
 
-	// Extra specificity needed as these are commonly overruled.
-	&&& {
+	&&& ${ Input } {
+		padding-right: 0;
+	}
+
+	&&& ${ BackdropUI } {
 		border-right: 0;
-		border-bottom-right-radius: 0;
 		border-top-right-radius: 0;
-		margin: 0;
+		border-bottom-right-radius: 0;
 	}
 `;
 
@@ -88,32 +70,44 @@ export const TimeSeparator = styled.span`
 
 export const minutesField = css`
 	${ baseField }
-	${ baseInput }
+
 	width: 35px;
 
-	// Extra specificity needed as these are commonly overruled.
-	&&& {
+	&&& ${ Input } {
+		padding-left: 0;
+	}
+
+	&&& ${ BackdropUI } {
 		border-left: 0;
-		border-bottom-left-radius: 0;
 		border-top-left-radius: 0;
-		margin: 0;
+		border-bottom-left-radius: 0;
 	}
 `;
 
-export const monthField = css`
-	${ baseField }
+// Ideally we wouldn't need a wrapper, but can't otherwise target the
+// <BaseControl> in <SelectControl>
+export const MonthFieldWrapper = styled.div`
 	flex-grow: 1;
+`;
+
+export const monthField = css`
+	height: 36px;
+
+	// Ideally would target the component instead of a classname.
+	.components-select-control__input {
+		line-height: 30px;
+	}
 `;
 
 export const dayField = css`
 	${ baseField }
-	${ baseInput }
+
 	width: 35px;
 `;
 
 export const yearField = css`
 	${ baseField }
-	${ baseInput }
+
 	width: 55px;
 `;
 
