@@ -9,14 +9,14 @@ import {
 } from '@wordpress/components';
 import { close as closeIcon } from '@wordpress/icons';
 import { __ } from '@wordpress/i18n';
+import { forwardRef } from '@wordpress/element';
 
-export default function PublishDateTimePicker( {
-	onClose,
-	onChange,
-	...additionalProps
-} ) {
+function PublishDateTimePicker(
+	{ onClose, onChange, ...additionalProps },
+	ref
+) {
 	return (
-		<div className="block-editor-publish-date-time-picker">
+		<div ref={ ref } className="block-editor-publish-date-time-picker">
 			{ /* TODO: This header is essentially the same as the one in <PostVisiblity />. DRY it up. */ }
 			<HStack className="block-editor-publish-date-time-picker__header">
 				<h2 className="block-editor-publish-date-time-picker__heading">
@@ -41,3 +41,5 @@ export default function PublishDateTimePicker( {
 		</div>
 	);
 }
+
+export default forwardRef( PublishDateTimePicker );
