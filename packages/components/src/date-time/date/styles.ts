@@ -4,6 +4,11 @@
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
 
+/**
+ * Internal dependencies
+ */
+import Button from '../../button';
+
 // Styles that overrides the calendar styling provided by react-dates go in
 // style.scss. Everything else goes here.
 
@@ -37,12 +42,12 @@ const baseNavButton = css`
 	top: 15px;
 `;
 
-export const prevNavButton = css`
+export const NavPrevButton = styled( Button )`
 	${ baseNavButton }
 	left: 0;
 `;
 
-export const nextNavButton = css`
+export const NavNextButton = styled( Button )`
 	${ baseNavButton }
 	right: 0;
 `;

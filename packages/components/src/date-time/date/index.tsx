@@ -18,9 +18,7 @@ import { arrowLeft, arrowRight } from '@wordpress/icons';
  */
 import { getMomentDate } from './utils';
 import type { DatePickerDayProps, DatePickerProps } from '../types';
-import { Day, prevNavButton, nextNavButton } from './styles';
-import Button from '../../button';
-import { useCx } from '../../utils';
+import { Day, NavPrevButton, NavNextButton } from './styles';
 
 const TIMEZONELESS_FORMAT = 'YYYY-MM-DDTHH:mm:ss';
 const ARIAL_LABEL_TIME_FORMAT = 'dddd, LL';
@@ -101,7 +99,6 @@ export function DatePicker( {
 	onMonthPreviewed,
 }: DatePickerProps ) {
 	const nodeRef = useRef< HTMLDivElement >( null );
-	const cx = useCx();
 
 	const onMonthPreviewedHandler = ( newMonthDate: Moment ) => {
 		onMonthPreviewed?.( newMonthDate.toISOString() );
@@ -208,8 +205,7 @@ export function DatePicker( {
 					</>
 				) }
 				renderNavPrevButton={ ( { ariaLabel, ...props } ) => (
-					<Button
-						className={ cx( prevNavButton ) }
+					<NavPrevButton
 						icon={ arrowLeft }
 						variant="tertiary"
 						aria-label={ ariaLabel }
@@ -217,8 +213,7 @@ export function DatePicker( {
 					/>
 				) }
 				renderNavNextButton={ ( { ariaLabel, ...props } ) => (
-					<Button
-						className={ cx( nextNavButton ) }
+					<NavNextButton
 						icon={ arrowRight }
 						variant="tertiary"
 						aria-label={ ariaLabel }

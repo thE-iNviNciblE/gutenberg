@@ -21,20 +21,17 @@ import {
 	Wrapper,
 	Fieldset,
 	Legend,
-	hoursField,
+	HoursInput,
 	TimeSeparator,
-	minutesField,
-	MonthFieldWrapper,
-	monthField as monthFieldStyles,
-	dayField as dayFieldStyles,
-	yearField,
+	MinutesInput,
+	MonthSelectWrapper,
+	MonthSelect,
+	DayInput,
+	YearInput,
 	TimeWrapper,
 } from './styles';
 import { HStack } from '../../h-stack';
 import { Spacer } from '../../spacer';
-import { useCx } from '../../utils';
-import NumberControl from '../../number-control';
-import SelectControl from '../../select-control';
 import type { InputChangeCallback } from '../../input-control/types';
 
 const TIMEZONELESS_FORMAT = 'YYYY-MM-DDTHH:mm:ss';
@@ -92,8 +89,6 @@ export function TimePicker( {
 		[ date, is12Hour ]
 	);
 
-	const cx = useCx();
-
 	/**
 	 * Function that sets the date state and calls the onChange with a new date.
 	 * The date is truncated at the minutes.
@@ -106,7 +101,7 @@ export function TimePicker( {
 	}
 
 	const buildNumberControlChangeCallback = (
-		method: 'date' | 'hours' | 'minutes' | 'year'
+		method: 'hours' | 'minutes' | 'date' | 'year'
 	) => {
 		const callback: InputChangeCallback = ( value, { event } ) => {
 			if ( ! ( event.target instanceof HTMLInputElement ) ) {
@@ -151,11 +146,8 @@ export function TimePicker( {
 	}
 
 	const dayField = (
-		<NumberControl
-			className={ cx(
-				'components-datetime__time-field-day-input',
-				dayFieldStyles
-			) }
+		<DayInput
+			className="components-datetime__time-field-day-input"
 			label={ __( 'Day' ) }
 			hideLabelFromVision
 			__next36pxDefaultSize
@@ -172,12 +164,9 @@ export function TimePicker( {
 	);
 
 	const monthField = (
-		<MonthFieldWrapper>
-			<SelectControl
-				className={ cx(
-					'components-datetime__time-field-month-select',
-					monthFieldStyles
-				) }
+		<MonthSelectWrapper>
+			<MonthSelect
+				className="components-datetime__time-field-month-select"
 				label={ __( 'Month' ) }
 				hideLabelFromVision
 				__nextHasNoMarginBottom
@@ -202,7 +191,7 @@ export function TimePicker( {
 					onChange?.( newDate.format( TIMEZONELESS_FORMAT ) );
 				} }
 			/>
-		</MonthFieldWrapper>
+		</MonthSelectWrapper>
 	);
 
 	return (
@@ -213,11 +202,8 @@ export function TimePicker( {
 				</Legend>
 				<HStack className="components-datetime__time-wrapper">
 					<TimeWrapper className="components-datetime__time-field components-datetime__time-field-time">
-						<NumberControl
-							className={ cx(
-								'components-datetime__time-field-hours-input',
-								hoursField
-							) }
+						<HoursInput
+							className="components-datetime__time-field-hours-input"
 							label={ __( 'Hours' ) }
 							hideLabelFromVision
 							__next36pxDefaultSize
@@ -240,11 +226,8 @@ export function TimePicker( {
 						>
 							:
 						</TimeSeparator>
-						<NumberControl
-							className={ cx(
-								'components-datetime__time-field-minutes-input',
-								minutesField
-							) }
+						<MinutesInput
+							className="components-datetime__time-field-minutes-input"
 							label={ __( 'Minutes' ) }
 							hideLabelFromVision
 							__next36pxDefaultSize
@@ -304,11 +287,8 @@ export function TimePicker( {
 							{ monthField }
 						</>
 					) }
-					<NumberControl
-						className={ cx(
-							'components-datetime__time-field-year-input',
-							yearField
-						) }
+					<YearInput
+						className="components-datetime__time-field-year-input"
 						label={ __( 'Year' ) }
 						hideLabelFromVision
 						__next36pxDefaultSize

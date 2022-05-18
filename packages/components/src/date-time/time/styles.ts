@@ -13,6 +13,8 @@ import {
 	Input,
 	BackdropUI,
 } from '../../input-control/styles/input-control-styles';
+import NumberControl from '../../number-control';
+import SelectControl from '../../select-control';
 
 export const Wrapper = styled.div``;
 
@@ -35,7 +37,7 @@ export const TimeWrapper = styled.div`
 	display: flex;
 `;
 
-const baseField = css`
+const baseInput = css`
 	&&& ${ Input } {
 		padding-left: ${ space( 2 ) };
 		padding-right: ${ space( 2 ) };
@@ -43,8 +45,8 @@ const baseField = css`
 	}
 `;
 
-export const hoursField = css`
-	${ baseField }
+export const HoursInput = styled( NumberControl )`
+	${ baseInput }
 
 	width: 35px;
 
@@ -68,8 +70,8 @@ export const TimeSeparator = styled.span`
 	display: inline-block;
 `;
 
-export const minutesField = css`
-	${ baseField }
+export const MinutesInput = styled( NumberControl )`
+	${ baseInput }
 
 	width: 35px;
 
@@ -86,11 +88,11 @@ export const minutesField = css`
 
 // Ideally we wouldn't need a wrapper, but can't otherwise target the
 // <BaseControl> in <SelectControl>
-export const MonthFieldWrapper = styled.div`
+export const MonthSelectWrapper = styled.div`
 	flex-grow: 1;
 `;
 
-export const monthField = css`
+export const MonthSelect = styled( SelectControl )`
 	height: 36px;
 
 	// Ideally would target the component instead of a classname.
@@ -99,14 +101,14 @@ export const monthField = css`
 	}
 `;
 
-export const dayField = css`
-	${ baseField }
+export const DayInput = styled( NumberControl )`
+	${ baseInput }
 
 	width: 35px;
 `;
 
-export const yearField = css`
-	${ baseField }
+export const YearInput = styled( NumberControl )`
+	${ baseInput }
 
 	width: 55px;
 `;
