@@ -16,6 +16,22 @@
  */
 class WP_Theme_JSON_6_1 extends WP_Theme_JSON_6_0 {
 	/**
+	 * The valid elements that can be found under styles.
+	 *
+	 * @var string[]
+	 */
+	const ELEMENTS = array(
+		'link' => 'a',
+		'h1'   => 'h1',
+		'h2'   => 'h2',
+		'h3'   => 'h3',
+		'h4'   => 'h4',
+		'h5'   => 'h5',
+		'h6'   => 'h6',
+		'caption' => 'figcaption',
+	);
+
+	/**
 	 * Returns the metadata for each block.
 	 *
 	 * Example:
