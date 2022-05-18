@@ -4,6 +4,8 @@
 import moment from 'moment';
 import type { Moment } from 'moment';
 import { noop } from 'lodash';
+// `react-dates` doesn't tree-shake correctly, so we import from the individual
+// component here.
 import DayPickerSingleDateController from 'react-dates/lib/components/DayPickerSingleDateController';
 
 /**
