@@ -32,6 +32,7 @@ export function NumberControl(
 		required = false,
 		shiftStep = 10,
 		step = 1,
+		pad = 1,
 		type: typeProp = 'number',
 		value: valueProp,
 		...props
@@ -43,9 +44,10 @@ export function NumberControl(
 	const baseValue = roundClamp( 0, min, max, baseStep );
 	const constrainValue = ( value, stepOverride ) => {
 		// When step is "any" clamp the value, otherwise round and clamp it.
-		return isStepAny
+		const number = isStepAny
 			? Math.min( max, Math.max( min, value ) )
 			: roundClamp( value, min, max, stepOverride ?? baseStep );
+		return number.toString().padStart( pad, '0' );
 	};
 
 	const autoComplete = typeProp === 'number' ? 'off' : null;
