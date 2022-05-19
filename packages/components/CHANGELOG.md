@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Experimental
+
+-   `Spacer`: Add RTL support. ([#41172](https://github.com/WordPress/gutenberg/pull/41172))
+
 ## 19.11.0 (2022-05-18)
 
 ### Enhancements
