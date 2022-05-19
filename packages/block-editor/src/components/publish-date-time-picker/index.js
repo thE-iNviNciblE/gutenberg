@@ -7,7 +7,7 @@ import {
 	__experimentalSpacer as Spacer,
 	Button,
 } from '@wordpress/components';
-import { close as closeIcon } from '@wordpress/icons';
+import { closeSmall } from '@wordpress/icons';
 import { __ } from '@wordpress/i18n';
 import { forwardRef } from '@wordpress/element';
 
@@ -31,8 +31,8 @@ function PublishDateTimePicker(
 					{ __( 'Now' ) }
 				</Button>
 				<Button
-					isSmall
-					icon={ closeIcon }
+					className="block-editor-publish-date-time-picker__close"
+					icon={ closeSmall }
 					label={ __( 'Close' ) }
 					onClick={ onClose }
 				/>

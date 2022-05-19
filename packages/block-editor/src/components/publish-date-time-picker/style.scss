@@ -8,5 +8,13 @@
 }
 
 .block-editor-publish-date-time-picker__reset {
+	height: $icon-size;
 	margin: 0;
+	text-decoration: underline;
+}
+
+.block-editor-publish-date-time-picker__close.has-icon {
+	height: $icon-size;
+	min-width: $icon-size;
+	padding: 0;
 }
