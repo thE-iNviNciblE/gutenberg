@@ -2,7 +2,6 @@
  * External dependencies
  */
 import moment from 'moment';
-import type { Moment } from 'moment';
 
 /**
  * WordPress dependencies
@@ -89,17 +88,6 @@ export function TimePicker( {
 		[ date, is12Hour ]
 	);
 
-	/**
-	 * Function that sets the date state and calls the onChange with a new date.
-	 * The date is truncated at the minutes.
-	 *
-	 * @param {Moment} newDate The date object.
-	 */
-	function changeDate( newDate: Moment ) {
-		setDate( newDate );
-		onChange?.( newDate.format( TIMEZONELESS_FORMAT ) );
-	}
-
 	const buildNumberControlChangeCallback = (
 		method: 'hours' | 'minutes' | 'date' | 'year'
 	) => {
@@ -140,8 +128,8 @@ export function TimePicker( {
 			const newDate = date
 				.clone()
 				.hours( from12hTo24h( parsedHours, value === 'PM' ) );
-
-			changeDate( newDate );
+			setDate( newDate );
+			onChange?.( newDate.format( TIMEZONELESS_FORMAT ) );
 		};
 	}
 
