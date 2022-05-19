@@ -8,6 +8,7 @@ import { css } from '@emotion/react';
  * Internal dependencies
  */
 import Button from '../../button';
+import { COLORS } from '../../utils';
 
 // Styles that overrides the calendar styling provided by react-dates go in
 // style.scss. Everything else goes here.
@@ -33,6 +34,10 @@ export const Day = styled.div< { hasEvents: boolean } >`
 			margin-left: -2px;
 			position: absolute;
 			width: 4px;
+
+			.CalendarDay__selected & {
+				background: ${ COLORS.white };
+			}
 		}
 		` }
 `;
