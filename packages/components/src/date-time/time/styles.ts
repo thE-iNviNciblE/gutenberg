@@ -34,6 +34,7 @@ export const Legend = styled.legend`
 `;
 
 export const TimeWrapper = styled.div`
+	direction: ltr;
 	display: flex;
 `;
 
