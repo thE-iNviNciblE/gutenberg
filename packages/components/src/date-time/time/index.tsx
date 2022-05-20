@@ -135,7 +135,7 @@ export function TimePicker( {
 
 	const dayField = (
 		<DayInput
-			className="components-datetime__time-field-day-input"
+			className="components-datetime__time-field-day-input" // Unused, for backwards compatibility.
 			label={ __( 'Day' ) }
 			hideLabelFromVision
 			__next36pxDefaultSize
@@ -154,7 +154,7 @@ export function TimePicker( {
 	const monthField = (
 		<MonthSelectWrapper>
 			<MonthSelect
-				className="components-datetime__time-field-month-select"
+				className="components-datetime__time-field-month-select" // Unused, for backwards compatibility.
 				label={ __( 'Month' ) }
 				hideLabelFromVision
 				__nextHasNoMarginBottom
@@ -183,15 +183,23 @@ export function TimePicker( {
 	);
 
 	return (
-		<Wrapper className="components-datetime__time">
+		<Wrapper
+			className="components-datetime__time" // Unused, for backwards compatibility.
+		>
 			<Fieldset>
-				<Legend className="components-datetime__time-legend">
+				<Legend
+					className="components-datetime__time-legend" // Unused, for backwards compatibility.
+				>
 					{ __( 'Time' ) }
 				</Legend>
-				<HStack className="components-datetime__time-wrapper">
-					<TimeWrapper className="components-datetime__time-field components-datetime__time-field-time">
+				<HStack
+					className="components-datetime__time-wrapper" // Unused, for backwards compatibility.
+				>
+					<TimeWrapper
+						className="components-datetime__time-field components-datetime__time-field-time" // Unused, for backwards compatibility.
+					>
 						<HoursInput
-							className="components-datetime__time-field-hours-input"
+							className="components-datetime__time-field-hours-input" // Unused, for backwards compatibility.
 							label={ __( 'Hours' ) }
 							hideLabelFromVision
 							__next36pxDefaultSize
@@ -209,13 +217,13 @@ export function TimePicker( {
 							) }
 						/>
 						<TimeSeparator
-							className="components-datetime__time-separator"
+							className="components-datetime__time-separator" // Unused, for backwards compatibility.
 							aria-hidden="true"
 						>
 							:
 						</TimeSeparator>
 						<MinutesInput
-							className="components-datetime__time-field-minutes-input"
+							className="components-datetime__time-field-minutes-input" // Unused, for backwards compatibility.
 							label={ __( 'Minutes' ) }
 							hideLabelFromVision
 							__next36pxDefaultSize
@@ -234,9 +242,11 @@ export function TimePicker( {
 						/>
 					</TimeWrapper>
 					{ is12Hour && (
-						<ButtonGroup className="components-datetime__time-field components-datetime__time-field-am-pm">
+						<ButtonGroup
+							className="components-datetime__time-field components-datetime__time-field-am-pm" // Unused, for backwards compatibility.
+						>
 							<Button
-								className="components-datetime__time-am-button"
+								className="components-datetime__time-am-button" // Unused, for backwards compatibility.
 								variant={
 									am === 'AM' ? 'primary' : 'secondary'
 								}
@@ -245,7 +255,7 @@ export function TimePicker( {
 								{ __( 'AM' ) }
 							</Button>
 							<Button
-								className="components-datetime__time-pm-button"
+								className="components-datetime__time-pm-button" // Unused, for backwards compatibility.
 								variant={
 									am === 'PM' ? 'primary' : 'secondary'
 								}
@@ -260,10 +270,14 @@ export function TimePicker( {
 				</HStack>
 			</Fieldset>
 			<Fieldset>
-				<Legend className="components-datetime__time-legend">
+				<Legend
+					className="components-datetime__time-legend" // Unused, for backwards compatibility.
+				>
 					{ __( 'Date' ) }
 				</Legend>
-				<HStack className="components-datetime__time-wrapper">
+				<HStack
+					className="components-datetime__time-wrapper" // Unused, for backwards compatibility.
+				>
 					{ is12Hour ? (
 						<>
 							{ monthField }
@@ -276,7 +290,7 @@ export function TimePicker( {
 						</>
 					) }
 					<YearInput
-						className="components-datetime__time-field-year-input"
+						className="components-datetime__time-field-year-input" // Unused, for backwards compatibility.
 						label={ __( 'Year' ) }
 						hideLabelFromVision
 						__next36pxDefaultSize
