@@ -9,16 +9,13 @@ import { css } from '@emotion/react';
  */
 import Button from '../../button';
 import { COLORS } from '../../utils';
+import { VStack } from '../../v-stack';
 
 // Styles that overrides the calendar styling provided by react-dates go in
 // style.scss. Everything else goes here.
 
-export const Day = styled.div< { hasEvents: boolean } >`
-	align-content: center;
-	display: flex;
-	flex-direction: column;
+export const Day = styled( VStack )< { hasEvents: boolean } >`
 	height: 100%;
-	justify-content: center;
 	position: relative;
 
 	${ ( props ) =>

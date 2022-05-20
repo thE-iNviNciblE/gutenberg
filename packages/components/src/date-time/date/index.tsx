@@ -68,6 +68,7 @@ function DatePickerDay( { day, events = [] }: DatePickerDayProps ) {
 			ref={ ref }
 			className="components-datetime__date__day" // Unused, for backwards compatibility.
 			hasEvents={ !! events?.length }
+			alignment="center"
 		>
 			{ day.format( 'D' ) }
 		</Day>
