@@ -37,7 +37,12 @@ function PublishDateTimePicker(
 					onClick={ onClose }
 				/>
 			</HStack>
-			<DateTimePicker onChange={ onChange } { ...additionalProps } />
+			<DateTimePicker
+				__nextRemoveHelpButton
+				__nextRemoveResetButton
+				onChange={ onChange }
+				{ ...additionalProps }
+			/>
 		</div>
 	);
 }
