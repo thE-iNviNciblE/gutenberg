@@ -32,11 +32,43 @@ import {
 import { HStack } from '../../h-stack';
 import { Spacer } from '../../spacer';
 import type { InputChangeCallback } from '../../input-control/types';
+import type { InputState } from '../../input-control/reducer/state';
+import {
+	COMMIT,
+	InputAction,
+	PRESS_DOWN,
+	PRESS_UP,
+} from '../../input-control/reducer/actions';
 
 const TIMEZONELESS_FORMAT = 'YYYY-MM-DDTHH:mm:ss';
 
 function from12hTo24h( hours: number, isPm: boolean ) {
 	return isPm ? ( ( hours % 12 ) + 12 ) % 24 : hours % 12;
+}
+
+/**
+ * Creates an InputControl reducer used to pad an input so that it is always a
+ * given width. For example, the hours and minutes inputs are padded to 2 so
+ * that '4' appears as '04'.
+ *
+ * @param  pad How many digits the value should be.
+ */
+function buildPadInputStateReducer( pad: number ) {
+	return ( state: InputState, action: InputAction ) => {
+		const nextState = { ...state };
+		if (
+			action.type === COMMIT ||
+			action.type === PRESS_UP ||
+			action.type === PRESS_DOWN
+		) {
+			if ( nextState.value !== undefined ) {
+				nextState.value = nextState.value
+					.toString()
+					.padStart( pad, '0' );
+			}
+		}
+		return nextState;
+	};
 }
 
 /**
@@ -143,6 +175,7 @@ export function TimePicker( {
 			step={ 1 }
 			min={ 1 }
 			max={ 31 }
+			required
 			hideHTMLArrows
 			isPressEnterToChange
 			isDragEnabled={ false }
@@ -207,12 +240,16 @@ export function TimePicker( {
 							step={ 1 }
 							min={ is12Hour ? 1 : 0 }
 							max={ is12Hour ? 12 : 23 }
+							required
 							hideHTMLArrows
 							isPressEnterToChange
 							isDragEnabled={ false }
 							isShiftStepEnabled={ false }
 							onChange={ buildNumberControlChangeCallback(
 								'hours'
+							) }
+							__unstableStateReducer={ buildPadInputStateReducer(
+								2
 							) }
 						/>
 						<TimeSeparator
@@ -230,12 +267,16 @@ export function TimePicker( {
 							step={ 1 }
 							min={ 0 }
 							max={ 59 }
+							required
 							hideHTMLArrows
 							isPressEnterToChange
 							isDragEnabled={ false }
 							isShiftStepEnabled={ false }
 							onChange={ buildNumberControlChangeCallback(
 								'minutes'
+							) }
+							__unstableStateReducer={ buildPadInputStateReducer(
+								2
 							) }
 						/>
 					</TimeWrapper>
@@ -294,11 +335,17 @@ export function TimePicker( {
 						__next36pxDefaultSize
 						value={ year }
 						step={ 1 }
+						min={ 1 }
+						max={ 9999 }
+						required
 						hideHTMLArrows
 						isPressEnterToChange
 						isDragEnabled={ false }
 						isShiftStepEnabled={ false }
 						onChange={ buildNumberControlChangeCallback( 'year' ) }
+						__unstableStateReducer={ buildPadInputStateReducer(
+							4
+						) }
 					/>
 				</HStack>
 			</Fieldset>
