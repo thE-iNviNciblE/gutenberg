@@ -207,7 +207,6 @@ export function TimePicker( {
 							step={ 1 }
 							min={ is12Hour ? 1 : 0 }
 							max={ is12Hour ? 12 : 23 }
-							pad={ 2 }
 							hideHTMLArrows
 							isPressEnterToChange
 							isDragEnabled={ false }
@@ -231,7 +230,6 @@ export function TimePicker( {
 							step={ 1 }
 							min={ 0 }
 							max={ 59 }
-							pad={ 2 }
 							hideHTMLArrows
 							isPressEnterToChange
 							isDragEnabled={ false }
