@@ -313,6 +313,11 @@ export function useRandomizer( name ) {
 	);
 
 	function randomizeColors() {
+		/* eslint-disable no-restricted-syntax */
+		const minLightness = Math.random() * ( 0.3 - 0.1 ) + 0.1; // Generate a random number between 0.1 and 0.3
+		const maxLightneess = Math.random() * ( 0.99 - 0.8 ) + 0.8; // Generate a random numbet between 0.8 and 0.99
+		/* eslint-enable no-restricted-syntax */
+
 		/*
 			Generates a color scale based on hue scale rotations in the Cubehelix color scheme,
  			from lightest to darkest.
@@ -326,7 +331,7 @@ export function useRandomizer( name ) {
 			/* eslint-disable-next-line no-restricted-syntax */
 			.start( Math.floor( Math.random() * 360 ) ) // Generate a random start point for the hue scale.
 			.rotations( 0.75 )
-			.lightness( [ 0.3, 0.8 ] ) // Defines minimum and maximum lightness of first and last colors,
+			.lightness( [ minLightness, maxLightneess ] ) // Defines minimum and maximum lightness of first and last colors,
 			// respectively. By default, the ends of scales are black and white.
 			.scale() // convert to chroma.scale
 			.correctLightness()
